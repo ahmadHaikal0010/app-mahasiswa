@@ -1,13 +1,17 @@
 package com.haikal.app_mahasiswa.adapter
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
+import com.haikal.app_mahasiswa.DetailPageActivity
 import com.haikal.app_mahasiswa.R
 import com.haikal.app_mahasiswa.helper.MahasiswaDatabaseHelper
 import com.haikal.app_mahasiswa.model.ModelMahasiswa
@@ -43,6 +47,34 @@ class MahasiswaAdapter(
         holder.txtNama.text = mahasiswaData.nama
         holder.txtNIM.text = mahasiswaData.nim
         holder.txtJurusan.text = mahasiswaData.jurusan
+        holder.cardMahasiswa.setOnClickListener() {
+            val intent = Intent(holder.itemView.context, DetailPageActivity::class.java)
+            intent.putExtra("nama", mahasiswaData.nama)
+            intent.putExtra("nim", mahasiswaData.nim)
+            intent.putExtra("jurusan", mahasiswaData.jurusan)
+
+            holder.itemView.context.startActivity(intent)
+        }
+        holder.btnDelete.setOnClickListener() {
+            AlertDialog.Builder(holder.itemView.context).apply {
+                setTitle("Confirmation")
+                setMessage("Do you want to continue ?")
+                setIcon(R.drawable.baseline_delete_24)
+
+                setPositiveButton("Yes") {
+                    dialogInterface, i->
+                    db.deleteNote(mahasiswaData.id)
+                    refreshData(db.getAllNotes())
+                    Toast.makeText(holder.itemView.context, "Note berhasil dihapus", Toast.LENGTH_SHORT).show()
+                    dialogInterface.dismiss()
+                }
+
+                setNeutralButton("No") {
+                    dialogInterface, i->
+                    dialogInterface.dismiss()
+                }
+            }.show()
+        }
     }
 
     fun refreshData(newNotes: List<ModelMahasiswa>) {
