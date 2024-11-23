@@ -15,6 +15,7 @@ import com.haikal.app_mahasiswa.DetailPageActivity
 import com.haikal.app_mahasiswa.R
 import com.haikal.app_mahasiswa.helper.MahasiswaDatabaseHelper
 import com.haikal.app_mahasiswa.model.ModelMahasiswa
+import com.haikal.app_mahasiswa.screen.UpdateMahasiswaActivity
 
 class MahasiswaAdapter(
     private var mahasiswa: List<ModelMahasiswa>,
@@ -74,6 +75,13 @@ class MahasiswaAdapter(
                     dialogInterface.dismiss()
                 }
             }.show()
+        }
+
+        holder.btnEdit.setOnClickListener() {
+            val intent = Intent(holder.itemView.context, UpdateMahasiswaActivity::class.java).apply {
+                putExtra("note_id", mahasiswaData.id)
+            }
+            holder.itemView.context.startActivity(intent)
         }
     }
 
